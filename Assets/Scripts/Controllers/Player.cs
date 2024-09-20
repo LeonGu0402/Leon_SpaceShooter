@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using Codice.CM.Common;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -9,7 +11,9 @@ public class Player : MonoBehaviour
     public GameObject bombPrefab;
     public Transform bombsTransform;
 
-    public float velocity = 0.3f;
+    public float speed = 3f;
+
+    Vector3 velocity = Vector3.zero;
 
     void Update()
     {
@@ -24,24 +28,31 @@ public class Player : MonoBehaviour
 
     public void playerMovement()
     {
+        velocity = Vector3.zero;
+
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y + velocity, transform.position.z);
+            velocity.y += speed;
         }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y - velocity, transform.position.z);
+            velocity.y -= speed;
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.position = new Vector3(transform.position.x + velocity, transform.position.y, transform.position.z);
+            velocity.x += speed;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.position = new Vector3(transform.position.x - velocity, transform.position.y, transform.position.z);
+            velocity.x -= speed;
         }
+
+        velocity = velocity.normalized * speed;
+
+        transform.position += velocity * Time.deltaTime;
+
     }
 }
