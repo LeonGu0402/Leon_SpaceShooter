@@ -15,8 +15,10 @@ public class Player : MonoBehaviour
     //public float speed;
     public float maxSpeed;
     public float accelerationTime;
+    public float decelerationTime;
 
     private float acceleration;
+    private float deceleration;
     private Vector3 velocity = Vector3.zero;
 
 
@@ -24,6 +26,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         acceleration = maxSpeed / accelerationTime;
+        deceleration = maxSpeed / decelerationTime;
 
     }
 
@@ -83,13 +86,11 @@ public class Player : MonoBehaviour
             {
                 velocity += Vector3.up * acceleration * Time.deltaTime;
             }
-            
-            Debug.Log(velocity);
         }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            if(velocity.y < -maxSpeed)
+            if (velocity.y <= -maxSpeed)
             {
                 velocity.y = -maxSpeed;
             }
@@ -97,8 +98,6 @@ public class Player : MonoBehaviour
             {
                 velocity += Vector3.down * acceleration * Time.deltaTime;
             }
-
-            Debug.Log(velocity);
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
@@ -111,24 +110,57 @@ public class Player : MonoBehaviour
             {
                 velocity += Vector3.right * acceleration * Time.deltaTime;
             }
-
-            Debug.Log(velocity);
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            if (velocity.x < -maxSpeed)
+            if (velocity.x <= -maxSpeed)
             {
                 velocity.x = -maxSpeed;
             }
             else
             {
-                velocity += Vector3.right * acceleration * Time.deltaTime;
+                velocity += Vector3.left * acceleration * Time.deltaTime;
             }
-
-            Debug.Log(velocity);
         }
 
+        ////deceleration
+        if (!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow) && !Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow))
+        {
+            if (velocity.y > 0 && velocity.y != 0)
+            {
+                velocity -= Vector3.up * deceleration * Time.deltaTime;
+            }
+
+            if (velocity.y < 0 && velocity.y != 0)
+            {
+                velocity -= Vector3.down * deceleration * Time.deltaTime;
+            }
+
+            if (velocity.x > 0 && velocity.x != 0)
+            {
+                velocity -= Vector3.right * deceleration * Time.deltaTime;
+            }
+
+            if (velocity.x < 0 && velocity.x != 0)
+            {
+                velocity -= Vector3.left * deceleration * Time.deltaTime;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Debug.Log(velocity);
         transform.position += velocity * Time.deltaTime;
     }
 
