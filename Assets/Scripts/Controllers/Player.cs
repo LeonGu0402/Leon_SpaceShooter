@@ -1,4 +1,5 @@
-﻿using Codice.CM.Common;
+﻿using Codice.Client.BaseCommands;
+using Codice.CM.Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,9 +12,20 @@ public class Player : MonoBehaviour
     public GameObject bombPrefab;
     public Transform bombsTransform;
 
-    public float speed = 3f;
+    //public float speed;
+    public float maxSpeed;
+    public float accelerationTime;
 
-    Vector3 velocity = Vector3.zero;
+    private float acceleration;
+    private Vector3 velocity = Vector3.zero;
+
+
+
+    private void Start()
+    {
+        acceleration = maxSpeed / accelerationTime;
+
+    }
 
     void Update()
     {
@@ -25,34 +37,108 @@ public class Player : MonoBehaviour
         playerMovement();
     }
 
+    //Task1A
+    //public void playerMovement()
+    //{
+    //    velocity = Vector3.zero;
 
+    //    if (Input.GetKey(KeyCode.UpArrow))
+    //    {
+    //        velocity.y += speed;
+    //    }
+
+    //    if (Input.GetKey(KeyCode.DownArrow))
+    //    {
+    //        velocity.y -= speed;
+    //    }
+
+    //    if (Input.GetKey(KeyCode.RightArrow))
+    //    {
+    //        velocity.x += speed;
+    //    }
+
+    //    if (Input.GetKey(KeyCode.LeftArrow))
+    //    {
+    //        velocity.x -= speed;
+    //    }
+
+    //    velocity = velocity.normalized * speed;
+
+    //    transform.position += velocity * Time.deltaTime;
+
+    //}
+
+
+    //Task1B
     public void playerMovement()
     {
-        velocity = Vector3.zero;
-
+        //acceleration
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            velocity.y += speed;
+            if (velocity.y >= maxSpeed)
+            {
+                velocity.y = maxSpeed;
+            }
+            else
+            {
+                velocity += Vector3.up * acceleration * Time.deltaTime;
+            }
+            
+            Debug.Log(velocity);
         }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            velocity.y -= speed;
+            if(velocity.y < -maxSpeed)
+            {
+                velocity.y = -maxSpeed;
+            }
+            else
+            {
+                velocity += Vector3.down * acceleration * Time.deltaTime;
+            }
+
+            Debug.Log(velocity);
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            velocity.x += speed;
+            if (velocity.x >= maxSpeed)
+            {
+                velocity.x = maxSpeed;
+            }
+            else
+            {
+                velocity += Vector3.right * acceleration * Time.deltaTime;
+            }
+
+            Debug.Log(velocity);
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            velocity.x -= speed;
+            if (velocity.x < -maxSpeed)
+            {
+                velocity.x = -maxSpeed;
+            }
+            else
+            {
+                velocity += Vector3.right * acceleration * Time.deltaTime;
+            }
+
+            Debug.Log(velocity);
         }
 
-        velocity = velocity.normalized * speed;
-
         transform.position += velocity * Time.deltaTime;
-
     }
+
+
+
+
+
+
+
+
+
+
 }
