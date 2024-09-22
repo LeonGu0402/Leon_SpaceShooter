@@ -148,18 +148,6 @@ public class Player : MonoBehaviour
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
         Debug.Log(velocity);
         transform.position += velocity * Time.deltaTime;
     }
