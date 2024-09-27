@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public List<Transform> asteroidTransforms;
     public Transform enemyTransform;
     public GameObject bombPrefab;
+    public GameObject powerupPrefab;
     public Transform bombsTransform;
 
     public float speed;
@@ -17,8 +18,10 @@ public class Player : MonoBehaviour
     //public float accelerationTime;
     //public float decelerationTime;
 
-    public float Radius;
+    public float radarRadius;
     public int circlePoints;
+    public float powerRadius;
+    public int powerNumbers;
 
 
     private float acceleration;
@@ -26,24 +29,30 @@ public class Player : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
 
 
-
     private void Start()
     {
         //acceleration = maxSpeed / accelerationTime;
         //deceleration = maxSpeed / decelerationTime;
-
     }
 
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SpawnPowerups(powerRadius, powerNumbers, powerupPrefab);
+        }
+
+
     }
 
     private void FixedUpdate()
     {
         playerMovement();
-        EnemyRadar(Radius, circlePoints);
+        EnemyRadar(radarRadius, circlePoints);
+
+        
     }
+
 
     //Task1A
     public void playerMovement()
@@ -167,8 +176,8 @@ public class Player : MonoBehaviour
         {
             for (int i = 0; i < pointNum; i++)
             {
-                Vector3 dot1 = transform.position + (new Vector3(Mathf.Cos(radians * (i + 1)), Mathf.Sin(radians * (i + 1)), 0).normalized) * radius;
-                Vector3 dot2 = transform.position + (new Vector3(Mathf.Cos(radians * (i + 2)), Mathf.Sin(radians * (i + 2)), 0).normalized) * radius;
+                Vector3 dot1 = transform.position + (new Vector3 (Mathf.Cos(radians * (i + 1)), Mathf.Sin(radians * (i + 1)), 0).normalized) * radius;
+                Vector3 dot2 = transform.position + (new Vector3 (Mathf.Cos(radians * (i + 2)), Mathf.Sin(radians * (i + 2)), 0).normalized) * radius;
 
                 Debug.DrawLine(dot1, dot2, Color.red);
             }
@@ -177,8 +186,8 @@ public class Player : MonoBehaviour
         {
             for (int i = 0; i < pointNum; i++)
             {
-                Vector3 dot1 = transform.position + (new Vector3(Mathf.Cos(radians * (i + 1)), Mathf.Sin(radians * (i + 1)), 0).normalized) * radius;
-                Vector3 dot2 = transform.position + (new Vector3(Mathf.Cos(radians * (i + 2)), Mathf.Sin(radians * (i + 2)), 0).normalized) * radius;
+                Vector3 dot1 = transform.position + (new Vector3 (Mathf.Cos(radians * (i + 1)), Mathf.Sin(radians * (i + 1)), 0).normalized) * radius;
+                Vector3 dot2 = transform.position + (new Vector3 (Mathf.Cos(radians * (i + 2)), Mathf.Sin(radians * (i + 2)), 0).normalized) * radius;
 
                 Debug.DrawLine(dot1, dot2, Color.green);
             }
@@ -186,8 +195,17 @@ public class Player : MonoBehaviour
     }
 
 
+    public void SpawnPowerups(float radius, int numberOfPowerups, GameObject powers)
+    {
+        float radians = Mathf.Deg2Rad * (360 / numberOfPowerups);
 
+        for (int i = 1; i <= numberOfPowerups; i++)
+        {
+            Vector3 position = transform.position + (new Vector3(Mathf.Cos(radians * (i)), Mathf.Sin(radians * (i)), 0).normalized) * radius;
 
+            Instantiate(powers, position, Quaternion.identity);
+        }
+    }
 
 
 
