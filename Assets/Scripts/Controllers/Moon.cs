@@ -22,13 +22,23 @@ public class Moon : MonoBehaviour
     }
 
 
+    //public void OrbitalMotion(float radius, float speed, Transform target)
+    //{
+
+    //    radian += Time.deltaTime;
+
+    //    Vector3 direction = target.position + (new Vector3(Mathf.Cos(radian), Mathf.Sin(radian), 0).normalized) * radius - transform.position;
+    //    transform.position += direction * speed * Time.deltaTime;
+        
+    //}
+
     public void OrbitalMotion(float radius, float speed, Transform target)
     {
+        float rotationSpeed = speed * Time.deltaTime * Mathf.Deg2Rad;
+        radian += rotationSpeed;
 
-        radian += Time.deltaTime;
+        Vector3 direction = target.position + new Vector3(Mathf.Cos(radian), Mathf.Sin(radian), 0) * radius;
+        transform.position = direction;
 
-        Vector3 direction = target.position + (new Vector3(Mathf.Cos(radian), Mathf.Sin(radian), 0).normalized) * radius - transform.position;
-        transform.position += direction * speed * Time.deltaTime;
-        
     }
 }

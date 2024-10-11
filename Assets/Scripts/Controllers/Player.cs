@@ -13,10 +13,10 @@ public class Player : MonoBehaviour
     public GameObject powerupPrefab;
     public Transform bombsTransform;
 
-    public float speed;
-    //public float maxSpeed;
-    //public float accelerationTime;
-    //public float decelerationTime;
+    //public float speed;
+    public float maxSpeed;
+    public float accelerationTime;
+    public float decelerationTime;
 
     public float radarRadius;
     public int circlePoints;
@@ -26,13 +26,17 @@ public class Player : MonoBehaviour
 
     private float acceleration;
     private float deceleration;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 currentVelocity;
+    private float maxSpeedSqr;
 
 
     private void Start()
     {
         //acceleration = maxSpeed / accelerationTime;
         //deceleration = maxSpeed / decelerationTime;
+        acceleration = maxSpeed / accelerationTime;
+        deceleration = maxSpeed / decelerationTime;
+        maxSpeedSqr = maxSpeed * maxSpeed;
     }
 
     void Update()
@@ -55,37 +59,35 @@ public class Player : MonoBehaviour
 
 
     //Task1A
-    public void playerMovement()
-    {
-        velocity = Vector3.zero;
+    //public void playerMovement()
+    //{
+    //    velocity = Vector3.zero;
 
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            velocity.y += speed;
-        }
+    //    if (Input.GetKey(KeyCode.UpArrow))
+    //    {
+    //        velocity.y += speed;
+    //    }
 
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            velocity.y -= speed;
-        }
+    //    if (Input.GetKey(KeyCode.DownArrow))
+    //    {
+    //        velocity.y -= speed;
+    //    }
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            velocity.x += speed;
-        }
+    //    if (Input.GetKey(KeyCode.RightArrow))
+    //    {
+    //        velocity.x += speed;
+    //    }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            velocity.x -= speed;
-        }
+    //    if (Input.GetKey(KeyCode.LeftArrow))
+    //    {
+    //        velocity.x -= speed;
+    //    }
 
-        velocity = velocity.normalized * speed;
+    //    velocity = velocity.normalized * speed;
 
-        transform.position += velocity * Time.deltaTime;
+    //    transform.position += velocity * Time.deltaTime;
 
-    }
-
-
+    //}
     //Task1B
     //public void playerMovement()
     //{
@@ -165,6 +167,44 @@ public class Player : MonoBehaviour
     //    //Debug.Log(velocity);
     //    transform.position += velocity * Time.deltaTime;
     //}
+
+    public void playerMovement()
+    {
+        Vector3 moveDirection = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.W))
+            moveDirection += Vector3.up;
+        if (Input.GetKey(KeyCode.S))
+            moveDirection += Vector3.down;
+
+        if (Input.GetKey(KeyCode.D))
+            moveDirection += Vector3.right;
+        if (Input.GetKey(KeyCode.A))
+            moveDirection += Vector3.left;
+
+        if (moveDirection.sqrMagnitude > 0)
+        {
+            currentVelocity += Time.deltaTime * acceleration * moveDirection;
+            if (currentVelocity.sqrMagnitude > maxSpeedSqr)
+            {
+                currentVelocity = currentVelocity.normalized * maxSpeed;
+            }
+        }
+        else
+        {
+            Vector3 velocityDelta = Time.deltaTime * deceleration * currentVelocity.normalized;
+            if (velocityDelta.sqrMagnitude > currentVelocity.sqrMagnitude)
+            {
+                currentVelocity = Vector3.zero;
+            }
+            else
+            {
+                currentVelocity -= velocityDelta;
+            }
+        }
+
+        transform.position += currentVelocity * Time.deltaTime;
+    }
 
 
     public void EnemyRadar(float radius, int pointNum)
