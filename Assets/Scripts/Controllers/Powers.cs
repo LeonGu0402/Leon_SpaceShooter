@@ -14,12 +14,16 @@ public class Powers : MonoBehaviour
 
     private Vector3 offset;
     private float radian = 0;
+    private float currentAngle;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.Find("Player");
         offset = transform.position - player.transform.position;
+        float currentAngle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
+        radian += currentAngle;
+
     }
 
     // Update is called once per frame
@@ -41,9 +45,10 @@ public class Powers : MonoBehaviour
 
     public void PowersSpin1(float radius, float speed, Vector3 player)
     {
-        float currentAngle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
+        
         float rotationSpeed = speed * Time.deltaTime * Mathf.Deg2Rad;
-        radian += rotationSpeed + currentAngle;
+
+        radian += rotationSpeed;
 
         Vector3 direction = player + new Vector3(Mathf.Cos(radian), Mathf.Sin(radian), 0) * radius;
         transform.position = direction;
