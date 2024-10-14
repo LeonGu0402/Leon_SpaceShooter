@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class Player : MonoBehaviour
 {
     public List<Transform> asteroidTransforms;
+    public List<GameObject> powersList;
     public Transform enemyTransform;
     //public GameObject bombPrefab;
     public GameObject powerupPrefab;
@@ -52,6 +53,8 @@ public class Player : MonoBehaviour
 
         //rescale the blackhole
         blackhole.transform.localScale = new Vector3(blackholeScale, blackholeScale, blackholeScale);
+        
+        //PowersSpin();
 
     }
 
@@ -61,7 +64,10 @@ public class Player : MonoBehaviour
         //EnemyRadar(radarRadius, circlePoints);
 
         blackholeForce(blackhole, pullForceSpeed, blackholeScale / 2);
+
         
+
+
     }
 
 
@@ -249,10 +255,20 @@ public class Player : MonoBehaviour
         for (int i = 1; i <= numberOfPowerups; i++)
         {
             Vector3 position = transform.position + (new Vector3(Mathf.Cos(radians * (i)), Mathf.Sin(radians * (i)), 0).normalized) * radius;
-
+            //powersList.Add(Instantiate(powers, position, Quaternion.identity));
             Instantiate(powers, position, Quaternion.identity);
         }
     }
+
+
+    //public void PowersSpin()
+    //{
+    //    foreach (GameObject power in powersList)
+    //    {
+    //        Vector3 offset = power.transform.position - transform.position;
+    //        power.transform.position = transform.position + offset;
+    //    }
+    //}
 
 
     public void blackholeForce(GameObject blackhole,float speed, float range)
