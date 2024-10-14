@@ -9,25 +9,29 @@ public class Player : MonoBehaviour
 {
     public List<Transform> asteroidTransforms;
     public Transform enemyTransform;
-    public GameObject bombPrefab;
+    //public GameObject bombPrefab;
     public GameObject powerupPrefab;
-    public Transform bombsTransform;
+    //public Transform bombsTransform;
+    public GameObject blackhole;
 
     //public float speed;
     public float maxSpeed;
     public float accelerationTime;
     public float decelerationTime;
 
-    public float radarRadius;
-    public int circlePoints;
+    //public float radarRadius;
+    //public int circlePoints;
     public float powerRadius;
     public int powerNumbers;
+    public float blackholeScale = 6f;
+    public float pullForceSpeed;
 
 
     private float acceleration;
     private float deceleration;
     private Vector3 currentVelocity;
     private float maxSpeedSqr;
+    private Vector3 pullForce;
 
 
     private void Start()
@@ -46,14 +50,17 @@ public class Player : MonoBehaviour
             SpawnPowerups(powerRadius, powerNumbers, powerupPrefab);
         }
 
+        //rescale the blackhole
+        blackhole.transform.localScale = new Vector3(blackholeScale, blackholeScale, blackholeScale);
 
     }
 
     private void FixedUpdate()
     {
         playerMovement();
-        EnemyRadar(radarRadius, circlePoints);
+        //EnemyRadar(radarRadius, circlePoints);
 
+        blackholeForce(blackhole, pullForceSpeed, blackholeScale / 2);
         
     }
 
@@ -248,5 +255,23 @@ public class Player : MonoBehaviour
     }
 
 
+    public void blackholeForce(GameObject blackhole,float speed, float range)
+    {
+        float distance = (transform.position - blackhole.transform.position).magnitude;
+        Vector3 direction = blackhole.transform.position - transform.position;
+
+        if (distance <= range)
+        {
+            //pullForce = direction * speed * Time.deltaTime;
+            pullForce += direction * Time.deltaTime * acceleration;
+            if (pullForce.sqrMagnitude > speed)
+            {
+                pullForce = direction * speed;
+            }
+            transform.position += pullForce * Time.deltaTime;
+        }
+
+        
+    }
 
 }
